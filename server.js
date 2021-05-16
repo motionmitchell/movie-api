@@ -4,7 +4,10 @@ let fs = require("fs")
 let host = "localhost"
 let port = 8080
 let requestListener = function (req, res) {
+    // data is a the string containging the url your on and the date of today and a new line
     let data = req.url + Date.now() + "\n"
+    console.log(req.url)
+//this is acting like a text file acting like a database
     fs.appendFile('log.txt', data, function (err) {
         if (err) throw err;
         console.log('Saved!');
