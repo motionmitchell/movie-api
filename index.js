@@ -26,6 +26,16 @@ const directors = [
 	{id:4,   name: "David Yates", bio: "", birthYear: 1920, deathYear: null},
 	{id:5,   name: "Robbin Williams", bio: "", birthYear: 1920, deathYear: 2014}
 ]
+
+const genre = [
+	{id:1,   category: "Pyschoglogical horror", description: "a very horrifying film", Movies: "the shining" },
+	{id:2,   category: "Indapendant movie", description: "indie movie", Movies: "Fight Club", },
+]
+
+const name = [
+	{id:1,   name: "samuel leroy Jackson", bio: "is an american actor", born: "Decmber 21, 1948" },
+]
+
 var users =[
 	{username: 'admin', password: 'Test1234', fullname: 'Admin', email: 'admin@test.com', roleId: 2},
 	{username: 'bob', password: 'Test1234', fullname: 'Bob', email: 'bob@test.com', roleId: 1}
@@ -135,9 +145,18 @@ app.get('/users', (req, res) => {
 app.get('/directors', (req, res) => {
     res.json(directors)
 })
+
+app.get('/genre', (req, res) => {
+    res.json(genre)
+})
 app.get('/movies', (req, res) => {
     res.json(movies)
 })
+
+app.get('/name', (req, res) => {
+    res.json(name)
+})
+
 app.get('/director/:nm', (req, res) => {
 	const nm = req.params.nm;
 	console.log ("nm: "+nm);
