@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false}));
 const movies = [
 	{id: 1, description: "The Matrix", genre: "Action", director: "", imageURL: ""},
 	{id: 2, description: "Fight Club", genre: "Action", director: "", imageURL: ""},
-	{id: 3, a: "Avatar", genre: "Sci Fi", director: "", imageURL: ""},
+	{id: 3, description: "Avatar", genre: "Sci Fi", director: "", imageURL: ""},
 	{id: 4, description: "The Godfather", genre: "Action", director: "", imageURL: ""},
 	{id: 5, description: "The Dark Knight", genre: "Thriller", director: "", imageURL: ""},
 	{id: 6, description: "Pulp fiction", genre: "", director: "", imageURL: ""},
@@ -99,7 +99,7 @@ app.post ("/register", (req, res) => {
 		email: em
 	}
 	users.push(user);
-	res.json (user);
+	res.send (user);
 })
 app.post ("/updateUser", (req, res) => {
 	const un = req.body.username;
@@ -114,7 +114,7 @@ app.post ("/updateUser", (req, res) => {
 		email: em
 	}
 	users.push(user);
-	res.json (user);
+	res.send (user);
 })
 function getCurrentUser ()
 {
@@ -139,35 +139,39 @@ app.get('/users', (req, res) => {
 		res.end("not authorized");
 	}
 	else {
-		res.json(users);
+		res.send(users);
 	}
 })
 app.get('/directors', (req, res) => {
-    res.json(directors)
+    res.send(directors)
+})
+
+app.get('/directors/georgelucas', (req, res) => {
+    res.send(directors)
 })
 
 app.get('/genre', (req, res) => {
-    res.json(genre)
+    res.send(genre)
 })
 app.get('/movies', (req, res) => {
-    res.json(movies)
+    res.send(movies)
 })
 
 app.get('/name', (req, res) => {
-    res.json(name)
+    res.send(movies)
 })
 
 app.get('/director/:nm', (req, res) => {
 	const nm = req.params.nm;
 	console.log ("nm: "+nm);
 	const d=getDirector(nm);
-	res.json (d);
+	res.send (d);
 })
 app.get('/movie/:id', (req, res) => {
 	const id = req.params.id;
 	console.log ("id: "+id);
 	const m=getMovie(parseInt(id));
-	res.json (m);
+	res.send (m);
 })
 app.get('/addMovie/:id', (req, res) => {
 	const id = req.params.id;
@@ -194,7 +198,7 @@ app.get('/genre/:g', (req, res) => {
 			data.push(movies[i]);
 		}
 	}
-	res.json (data);
+	res.send (data);
 })
 function getDirector (name)
 {
