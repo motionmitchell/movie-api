@@ -8,16 +8,16 @@ var ssn ;
 app.use(bodyParser.urlencoded({ extended: false}));
 
 const movies = [
-	{id: 1, description: "The Matrix", genre: "Action", director: "", imageURL: ""},
-	{id: 2, description: "Fight Club", genre: "Action", director: "", imageURL: ""},
-	{id: 3, description: "Avatar", genre: "Sci Fi", director: "", imageURL: ""},
-	{id: 4, description: "The Godfather", genre: "Action", director: "", imageURL: ""},
-	{id: 5, description: "The Dark Knight", genre: "Thriller", director: "", imageURL: ""},
-	{id: 6, description: "Pulp fiction", genre: "", director: "", imageURL: ""},
-	{id: 7, description: "Inception", genre: "Action", director: "", imageURL: ""},
-	{id: 8, description: "Intersteller", genre: "Sci Fi", director: "", imageURL: ""},
-	{id: 9, description: "Forest Gump", genre: "Comedy", director: "", imageURL: ""},
-	{id: 10, description: "Gladiator", genre: "Action", director: "", imageURL: ""}
+	{id: 1, name: "The Matrix", genre: "Action", director: "", imageURL: ""},
+	{id: 2, name: "Fight Club", genre: "Action", director: "", imageURL: ""},
+	{id: 3, name: "Avatar", genre: "Sci Fi", director: "", imageURL: ""},
+	{id: 4, name: "The Godfather", genre: "Action", director: "", imageURL: ""},
+	{id: 5, name: "The Dark Knight", genre: "Thriller", director: "", imageURL: ""},
+	{id: 6, name: "Pulp fiction", genre: "", director: "", imageURL: ""},
+	{id: 7, name: "Inception", genre: "Action", director: "", imageURL: ""},
+	{id: 8, name: "Intersteller", genre: "Sci Fi", director: "", imageURL: ""},
+	{id: 9, name: "Forest Gump", genre: "Comedy", director: "", imageURL: ""},
+	{id: 10, name: "Gladiator", genre: "Action", director: "", imageURL: ""}
 ]
 const directors = [
 	{id:1,   name: "George Lucas", bio: "", birthYear: 1920, deathYear: null},
@@ -87,6 +87,9 @@ app.get('/secreturl', (req, res) => {
 })
 
 app.post ("/register", (req, res) => {
+
+console.log(req.body)
+
 	const un = req.body.username;
 	const pw = req.body.password;
 	const nm = req.body.fullname;
@@ -99,7 +102,9 @@ app.post ("/register", (req, res) => {
 		email: em
 	}
 	users.push(user);
-	res.send (user);
+	console.log(user)
+	res.json(user);
+	
 })
 app.post ("/updateUser", (req, res) => {
 	const un = req.body.username;
@@ -146,9 +151,6 @@ app.get('/directors', (req, res) => {
     res.send(directors)
 })
 
-app.get('/directors/georgelucas', (req, res) => {
-    res.send(directors)
-})
 
 app.get('/genre', (req, res) => {
     res.send(genre)
@@ -161,13 +163,18 @@ app.get('/name', (req, res) => {
     res.send(movies)
 })
 
+app.get('/director/:name', (req, res) => {
+	const director = directors.find(({ name })=> name === req.params.name)
+	res.json(director); 
+  })
+
 app.get('/director/:nm', (req, res) => {
 	const nm = req.params.nm;
 	console.log ("nm: "+nm);
 	const d=getDirector(nm);
 	res.send (d);
 })
-app.get('/movie/:id', (req, res) => {
+app.get('/movies/:id', (req, res) => {
 	const id = req.params.id;
 	console.log ("id: "+id);
 	const m=getMovie(parseInt(id));
@@ -177,15 +184,17 @@ app.get('/addMovie/:id', (req, res) => {
 	const id = req.params.id;
 	console.log ("id: "+id);
 	const m=getMovie(parseInt(id));
-	res.end ("Movie: "+m.name+" Added to your favorites list");
+	res.send ("Movie: "+m.name+" Added to your favorites list");
 })
 app.get('/removeMovie/:id', (req, res) => {
 	const id = req.params.id;
 	console.log ("id: "+id);
-	const m=getMovie(parseInt(id));
-	res.end ("Movie: "+m.name+" removed to your favorites list");
+	const m = getMovie(parseInt(id));
+	console.log(m)
+	res.send("Movie: " + m.name + " removed to your favorites list");
 })
-app.get('/unregister', (req, res) => {
+app.post('/unregister', (req, res) => {
+	res.send("unregister")
 });
 app.get('/genre/:g', (req, res) => {
 	const g = req.params.g;
@@ -194,14 +203,13 @@ app.get('/genre/:g', (req, res) => {
 	for (let i in movies)
 	{
 		if (movies[i].genre===g)
-		{
+{
 			data.push(movies[i]);
 		}
 	}
 	res.send (data);
 })
-function getDirector (name)
-{
+function getDirector(name){
 	for (let i in directors)
 	{
 		if (directors[i].name===name)
@@ -210,15 +218,10 @@ function getDirector (name)
 		}
 	}
 }
-function getMovie (id)
+function getMovie(id)
 {
-	for (let i in movies)
-	{
-		if (movies[i].id===id)
-		{
-			return movies[i];
-		}
-	}
+	return movies.filter((movie) => movie.id === id)[0]
+
 }
 app.listen(8080, () => {
     console.log('Your app is listening on port 8080.');
